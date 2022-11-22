@@ -6,6 +6,7 @@ from jose import JWTError, jwt
 from pydantic import BaseModel, ValidationError
 
 from prisma.models import User
+from src.db import user
 from src.utils.prisma import Prisma, get_db
 
 from . import utils
@@ -38,12 +39,12 @@ async def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    user = await prisma.user.find_unique(where={"username": token_data.sub})
+    db_user = await user.get_by_username(prisma, token_data.sub)
 
-    if user is None:
+    if db_user is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Could not find user",
         )
 
-    return user
+    return db_user

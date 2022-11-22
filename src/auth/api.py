@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 from prisma import Prisma
 from prisma.partials import UserWithoutId, UserWithoutPassword
+from src.db import user
 from src.utils.prisma import get_db
 
 from . import utils
@@ -17,23 +18,16 @@ class Token(BaseModel):
 
 
 @router.post("/signup", response_model=UserWithoutPassword)
-async def create_user(input: UserWithoutId, prisma: Prisma = Depends(get_db)):
-    existing_user = await prisma.user.find_unique(where={"username": input.username})
+async def create_user(data: UserWithoutId, prisma: Prisma = Depends(get_db)):
+    existing_user = await user.get_by_username(prisma, data.username)
 
     if existing_user is not None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"User {input.username} already exists",
+            detail=f"User {data.username} already exists",
         )
 
-    created_user = await prisma.user.create(
-        {
-            "username": input.username,
-            "password": utils.get_hashed_password(input.password),
-            "name": input.name,
-            "phone": input.phone,
-        }
-    )
+    created_user = await user.create(prisma, data)
 
     return created_user
 
@@ -47,9 +41,7 @@ async def login(
         detail="Incorrect username or password",
     )
 
-    existing_user = await prisma.user.find_unique(
-        where={"username": form_data.username}
-    )
+    existing_user = await user.get_by_username(prisma, form_data.username)
 
     if existing_user is None or (
         not utils.verify_password(form_data.password, existing_user.password)
