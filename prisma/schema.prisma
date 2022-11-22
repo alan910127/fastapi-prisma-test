@@ -3,7 +3,7 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-generator db {
+generator client {
     provider             = "prisma-client-py"
     interface            = "asyncio"
     recursive_type_depth = 5
@@ -15,4 +15,6 @@ model User {
     name     String
     password String
     phone    String
+
+    @@index(username)
 }
