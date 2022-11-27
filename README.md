@@ -1,34 +1,66 @@
 # FastAPI Prisma Test
 
-## Overview
+A repository trying to add Prisma into FastAPI app
 
-- Package Manager: [PDM](https://pdm.fming.dev/latest/)
-- API Server: [FastAPI](https://fastapi.tiangolo.com)
-- Database ORM: [Prisma](https://www.prisma.io)
-  - Python Adapter: [Prisma Client Python](https://prisma-client-py.readthedocs.io/en/stable/)
-- Authentication: OAuth2 Password Flow
+## Tech Stack
 
-## Development Server
+**API Server:** [FastAPI](https://github.com/tiangolo/fastapi)
 
-### `pdm run dev`
+**Database ORM:** [Prisma](https://github.com/RobertCraigie/prisma-client-py)
 
-Starts a development server running locally on http://localhost:8000.
+**Dependency Manager:** [PDM](https://github.com/pdm-project/pdm)
+
+## Run Locally
+
+Clone the project
+
+```bash
+git clone https://github.com/alan910127/fastapi-prisma-test.git
+```
+
+Go to the project directory
+
+```bash
+cd fastapi-prisma-test
+```
+
+Install dependencies
+
+```bash
+pdm install
+```
+
+Start the server
+
+```bash
+pdm run dev
+```
+
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your `.env` file
+
+(or instead copy the `.env.example` into `.env`)
+
+`DATABASE_URL`
+
+- If you want to use a database other than SQLite, you should also change the `provider` in `prisma/schema.prisma`
 
 ## Prisma
 
-### `pdm run prisma migrate dev`
+### `prisma migrate dev`
 
-Create a migration script on `dev` environment.
+Create a migration script in `dev` environment
 
-### `pdm run prisma db push`
+### `prisma db push`
 
-Push the migration into database and generate the client (for type definitions).
+Push the migration into database and generate the client (for type definitions)
 
-### `pdm run prisma generate`
+### `prisma generate`
 
-Generate prisma client without modifying database.
+Generate prisma client without modifying database
 
-> Can add `--watch` option to watch the change in `prisma/schema.prisma` and automatically re-generate the client.
+> You can also add `--watch` command line option to automatically re-generate the client when there are changes in `prisma/schema.prisma`
 
 ### Prisma Studio
 
@@ -46,7 +78,7 @@ There are two other possible ways to use Prisma Studio:
 
 ## Editor Support
 
-Turn on string suggestion / completion feature on your code editor to get full benefit from the powerful type-safe Prisma ORM.
+Turn on string suggestion / completion feature on your code editor to get full power of the type-safe Prisma ORM
 
 ### Visual Studio Code
 
@@ -58,6 +90,5 @@ Turn on string suggestion / completion feature on your code editor to get full b
     "comments": false,
     "strings": true
   }
-  // ...
 }
 ```
